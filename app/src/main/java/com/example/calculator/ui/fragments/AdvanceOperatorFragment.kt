@@ -7,34 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.calculator.R
+import com.example.calculator.data.OperatorMap
+import com.example.calculator.data.Operators
 import com.example.calculator.databinding.FragmentAdvanceOperatorBinding
 import com.example.calculator.viewmodel.CalculatorViewModel
+import com.example.calculator.viewmodel.CalculatorViewModelFactory
+import com.example.calculator.viewmodel.OperatorButtons
+import com.example.calculator.viewmodel.TRIGMODE
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AdvanceOperatorFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AdvanceOperatorFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    private val viewModel:CalculatorViewModel by activityViewModels()
-    private lateinit var _binding:FragmentAdvanceOperatorBinding
+    private val viewModel: CalculatorViewModel by activityViewModels {
+        CalculatorViewModelFactory(requireContext())
+    }
+    private lateinit var _binding: FragmentAdvanceOperatorBinding
     private val binding get() = _binding!!
+    private lateinit var operators: Operators
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -43,26 +35,76 @@ class AdvanceOperatorFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentAdvanceOperatorBinding.inflate(inflater, container, false)
+        _init()
         return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AdvanceOperatorFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AdvanceOperatorFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        operators = Operators(requireContext())
+        binding.apply {
+            viewModel = this@AdvanceOperatorFragment.viewModel
+            radButton.setOnClickListener { changeAngleFormat() }
+            sinButton.setOnClickListener {
+                val operator  = operators.operatorMap()[sinButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
             }
+            tanButton.setOnClickListener {
+                val operator  = operators.operatorMap()[tanButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            cosButton.setOnClickListener {
+                val operator  = operators.operatorMap()[cosButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            sinhButton.setOnClickListener {
+                val operator  = operators.operatorMap()[sinhButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            tanhButton.setOnClickListener {
+                val operator  = operators.operatorMap()[tanhButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            coshButton.setOnClickListener {
+                val operator  = operators.operatorMap()[coshButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            expButton.setOnClickListener {
+                val operator  = operators.operatorMap()[expButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            fibButton.setOnClickListener {
+                val operator  = operators.operatorMap()[fibButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            lnButton.setOnClickListener {
+                val operator  = operators.operatorMap()[lnButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            logButton.setOnClickListener {
+                val operator  = operators.operatorMap()[logButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            sqrtButton.setOnClickListener {
+                val operator  = operators.operatorMap()[sqrtButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+            variableSqrtButton.setOnClickListener {
+                val operator  = operators.operatorMap()[variableSqrtButton.text]
+                viewModel.appendExp(operator!!.ComputedOperator, operator.DisplayOperator)
+            }
+        }
     }
+
+    private fun changeAngleFormat() {
+        if (viewModel.angleMode.value == getString(R.string.rad)) viewModel.changeAngleFormat(
+            getString(R.string.deg)
+        )
+        else viewModel.changeAngleFormat(getString(R.string.rad))
+    }
+
+    private fun _init() {
+        if (viewModel.angleMode.value.isNullOrBlank()) viewModel.changeAngleFormat(getString(R.string.deg))
+    }
+
 }

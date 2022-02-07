@@ -10,6 +10,10 @@
         <variable
             name="viewModel"
             type="com.example.calculator.viewmodel.CalculatorViewModel" />
+
+        <variable
+            name="trigMode"
+            type="com.example.calculator.viewmodel.TRIGMODE" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,43 +24,69 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/invButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:onClick="@{()->viewModel.appendExp(@string/_4)}"
+            android:onClick="@{()->viewModel.changeTrigFormat()}"
             android:text="@string/inv"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/radButton"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/radButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:onClick="@{()->viewModel.appendExp(@string/_4)}"
-            android:text="@string/rad"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/invButton" />
+            android:onClick="@{()->viewModel.changeAngleFormat()}"
+            android:text="@{viewModel.angleMode==@string/deg?@string/deg:@string/rad}"
+            app:layout_constraintLeft_toRightOf="@id/invButton"
+            app:layout_constraintTop_toTopOf="@id/invButton"
+            app:layout_constraintRight_toLeftOf="@id/factorialButton"
+            tools:text="@string/deg"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/factorialButton"
+            android:text="@string/factorial"
+            android:textAllCaps="false"
+            app:layout_constraintRight_toLeftOf="@id/sqrtButton"
+            app:layout_constraintLeft_toRightOf="@id/radButton"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/sqrtButton"
+            android:text="@string/sqrt"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toRightOf="@id/factorialButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
             android:id="@+id/sinButton"
-            android:text="@string/sin"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/sin:@string/asin}"
+            tools:text="@string/sin"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/invButton"
+            app:layout_constraintTop_toBottomOf="@id/invButton"
             />
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
             android:id="@+id/cosButton"
-            android:text="@string/cos"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/cos:@string/acos}"
+            tools:text="@string/cos"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/radButton"
             app:layout_constraintTop_toBottomOf="@id/radButton"
             />
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
             android:id="@+id/tanButton"
-            android:text="@string/tan"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/tan:@string/atan}"
+            tools:text="@string/tan"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/factorialButton"
+            app:layout_constraintTop_toBottomOf="@id/factorialButton"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -64,53 +94,63 @@
             android:id="@+id/logButton"
             android:text="@string/log"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/sqrtButton"
+            app:layout_constraintTop_toBottomOf="@id/sqrtButton"
             />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/expButton"
+            android:text="@string/exp"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/sinButton"
+            app:layout_constraintTop_toBottomOf="@id/sinButton"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/sinhButton"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/sinh:@string/asinh}"
+            tools:text="@string/sinh"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/cosButton"
+            app:layout_constraintTop_toBottomOf="@id/cosButton"
+            />
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/coshButton"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/cosh:@string/acosh}"
+            tools:text="@string/cosh"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/tanButton"
+            app:layout_constraintTop_toBottomOf="@id/tanButton"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tanhButton"
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:layout_marginTop="8dp"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/tanh:@string/atanh}"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/logButton"
+            app:layout_constraintTop_toBottomOf="@id/logButton"
+            tools:text="@string/tanh" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/openBracketButton"
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:text="@string/open_bracket"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/sinhButton"
+            app:layout_constraintTop_toBottomOf="@id/sinhButton" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
             android:id="@+id/lnButton"
             android:text="@string/ln"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/piButton"
-            android:text="@string/u03c0"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/expButton"
             app:layout_constraintTop_toBottomOf="@id/expButton"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/powButton"
-            android:text="@string/pow"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/expButton"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/expButton"
-            android:text="@string/e"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/openBracketButton"
-            android:text="@string/open_bracket"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -118,26 +158,35 @@
             android:id="@+id/closeBracketButton"
             android:text="@string/close_bracket"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/coshButton"
+            app:layout_constraintTop_toBottomOf="@id/coshButton"
             />
 
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/factorialButton"
-            android:text="@string/factorial"
+            android:id="@+id/piButton"
+            android:text="@string/u03c0"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/powButton"
+            app:layout_constraintTop_toBottomOf="@id/powButton"
             />
 
         <com.google.android.material.button.MaterialButton
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/sqrtButton"
-            android:text="@string/u221a"
+            android:id="@+id/powButton"
+            android:text="@string/pow"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/tanhButton"
+            app:layout_constraintTop_toBottomOf="@id/tanhButton"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
+            android:id="@+id/variableSqrtButton"
+            android:text="@string/xrt"
+            android:textAllCaps="false"
+            app:layout_constraintLeft_toLeftOf="@id/openBracketButton"
+            app:layout_constraintTop_toBottomOf="@id/openBracketButton"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -145,18 +194,29 @@
             android:id="@+id/fibButton"
             android:text="@string/fib"
             android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
+            app:layout_constraintLeft_toLeftOf="@id/closeBracketButton"
+            app:layout_constraintTop_toBottomOf="@id/closeBracketButton"
             />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/forwardButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Advance"
-            android:id="@+id/variableSqrtButton"
-            android:text="@string/variable_rt"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radButton"
-            />
+            android:onClick="@{()->viewModel.deleteExp()}"
+            app:iconSize="20dp"
+            app:iconGravity="textStart"
+            app:icon="@drawable/ic_baseline_arrow_back_24"
+            app:layout_constraintLeft_toLeftOf="@id/lnButton"
+            app:layout_constraintTop_toBottomOf="@id/lnButton" />
+
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            android:id="@+id/randomButton"-->
+<!--            style="@style/LargeButton"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:text="@string/random"-->
+<!--            android:textAllCaps="false"-->
+<!--            app:layout_constraintLeft_toLeftOf="@id/powButton"-->
+<!--            app:layout_constraintRight_toRightOf="@id/variableSqrtButton"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/powButton" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
