@@ -13,8 +13,13 @@
         <entry key="..\:/Users/Timtech/AndroidStudioProjects/Calculator/app/src/main/res/layout/activity_main.xml" value="0.14728682170542637" />
         <entry key="..\:/Users/Timtech/AndroidStudioProjects/Calculator/app/src/main/res/layout/common_button.xml" value="0.25" />
         <entry key="..\:/Users/Timtech/AndroidStudioProjects/Calculator/app/src/main/res/layout/fragment_advance_operator.xml" value="0.273989898989899" />
-        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/common_button.xml" value="0.12083333333333333" />
-        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/fragment_advance_operator.xml" value="0.33" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/drawable/ic_baseline_chevron_right_24.xml" value="0.165" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/drawable/keyboard_backspace_24.xml" value="0.165" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/drawable/rounded_button.xml" value="0.1665" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/activity_main.xml" value="0.494949494949495" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/common_button.xml" value="0.22" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/fragment_advance_operator.xml" value="0.29310344827586204" />
+        <entry key="..\:/Users/user/Documents/Timothy Stuff/My Code/Kotlin Android/Calculator/app/src/main/res/layout/fragment_landscape_button.xml" value="0.33" />
       </map>
     </option>
   </component>

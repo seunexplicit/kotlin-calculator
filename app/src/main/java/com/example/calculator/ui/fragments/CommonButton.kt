@@ -6,13 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.calculator.data.Operators
 import com.example.calculator.databinding.CommonButtonBinding
 import com.example.calculator.viewmodel.CalculatorViewModel
+import com.example.calculator.viewmodel.CalculatorViewModelFactory
 
 class CommonButton:Fragment() {
 
-    private val viewModel:CalculatorViewModel by activityViewModels()
+    private val sharedViewModel:CalculatorViewModel by activityViewModels {
+        CalculatorViewModelFactory(requireContext())
+    }
+
     private lateinit var _binding:CommonButtonBinding
+    private lateinit var operators: Operators
+
     val binding get() = _binding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -22,12 +29,21 @@ class CommonButton:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        operators = Operators(requireContext())
         binding.apply {
-            viewModel = this@CommonButton.viewModel
+            viewModel = sharedViewModel
+            removeButton.setOnLongClickListener {
+                sharedViewModel.clearExp()
+                true
+            }
+            divideButton.setOnClickListener {
+                val operator  = operators.operatorMap()[divideButton.text]
+                sharedViewModel.appendExp(operator!!.ComputedOperator, "${operator.DisplayOperator}")
+            }
         }
     }
 
     companion object{
-        val TAG = "Common Scope"
+        const val TAG = "Common Button Fragment"
     }
 }

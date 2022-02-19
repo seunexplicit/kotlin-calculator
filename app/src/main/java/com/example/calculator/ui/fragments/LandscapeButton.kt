@@ -7,20 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.calculator.R
-import com.example.calculator.data.OperatorMap
 import com.example.calculator.data.Operators
-import com.example.calculator.databinding.FragmentAdvanceOperatorBinding
+import com.example.calculator.databinding.FragmentLandscapeButtonBinding
 import com.example.calculator.viewmodel.CalculatorViewModel
 import com.example.calculator.viewmodel.CalculatorViewModelFactory
-import com.example.calculator.viewmodel.TRIGMODE
 
 
-class AdvanceOperatorFragment : Fragment() {
+class LandscapeButton : Fragment() {
+    // TODO: Rename and change types of parameters
 
     private val sharedViewModel: CalculatorViewModel by activityViewModels {
         CalculatorViewModelFactory(requireContext())
     }
-    private lateinit var _binding: FragmentAdvanceOperatorBinding
+    private lateinit var _binding:FragmentLandscapeButtonBinding
     private val binding get() = _binding!!
     private lateinit var operators: Operators
 
@@ -33,8 +32,7 @@ class AdvanceOperatorFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentAdvanceOperatorBinding.inflate(inflater, container, false)
-        _init()
+        _binding = FragmentLandscapeButtonBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,7 +41,7 @@ class AdvanceOperatorFragment : Fragment() {
         operators = Operators(requireContext())
         binding.apply {
             viewModel = sharedViewModel
-            lifecycleOwner = this@AdvanceOperatorFragment.viewLifecycleOwner
+            lifecycleOwner = this@LandscapeButton.viewLifecycleOwner
 
             sinButton.setOnClickListener {
                 val operator  = operators.operatorMap()[sinButton.text]
@@ -100,12 +98,7 @@ class AdvanceOperatorFragment : Fragment() {
         }
     }
 
-
-    private fun _init() {
+    companion object {
+        const val TAG="LANDSCAPE BUTTON FRAGMENT"
     }
-
-    companion object{
-        const val TAG = "Advance Button Fragment"
-    }
-
 }

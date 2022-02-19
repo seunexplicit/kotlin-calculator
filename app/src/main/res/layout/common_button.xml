@@ -5,6 +5,7 @@
     tools:context=".ui.fragments.CommonButton">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.calculator.viewmodel.CalculatorViewModel" />
@@ -17,7 +18,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sevenButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_7)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_7, "")}'
             android:text="@string/_7"
             app:layout_constraintBottom_toTopOf="@id/fourButton"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -27,7 +28,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/eightButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_8)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_8, "")}'
             android:text="@string/_8"
             app:layout_constraintBottom_toTopOf="@id/fiveButton"
             app:layout_constraintLeft_toRightOf="@id/sevenButton"
@@ -37,7 +38,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nineButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_9)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_9, "")}'
             android:text="@string/_9"
             app:layout_constraintBottom_toTopOf="@id/sixButton"
             app:layout_constraintLeft_toRightOf="@id/eightButton"
@@ -47,7 +48,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/plusButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/plus)}"
+            android:onClick='@{()->viewModel.appendExp(@string/plus, "")}'
             android:text="@string/plus"
             app:layout_constraintBottom_toTopOf="@id/minusButton"
             app:layout_constraintLeft_toRightOf="@id/nineButton"
@@ -57,7 +58,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fourButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_4)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_4, "")}'
             android:text="@string/_4"
             app:layout_constraintBottom_toTopOf="@id/oneButton"
             app:layout_constraintLeft_toLeftOf="@id/sevenButton"
@@ -66,7 +67,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fiveButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_5)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_5, "")}'
             android:text="@string/_5"
             app:layout_constraintBottom_toTopOf="@id/twoButton"
             app:layout_constraintLeft_toLeftOf="@id/eightButton"
@@ -75,7 +76,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sixButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_6)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_6, "")}'
             android:text="@string/_6"
             app:layout_constraintBottom_toTopOf="@id/threeButton"
             app:layout_constraintLeft_toLeftOf="@id/nineButton"
@@ -84,7 +85,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/minusButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/minus)}"
+            android:onClick='@{()->viewModel.appendExp(@string/minus, "")}'
             android:text="@string/minus"
             app:layout_constraintBottom_toTopOf="@id/multiplyButton"
             app:layout_constraintLeft_toLeftOf="@id/plusButton"
@@ -93,7 +94,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/oneButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_1)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_1, "")}'
             android:text="@string/_1"
             app:layout_constraintBottom_toTopOf="@id/pointButton"
             app:layout_constraintLeft_toLeftOf="@id/fourButton"
@@ -102,7 +103,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/twoButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_2)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_2, "")}'
             android:text="@string/_2"
             app:layout_constraintBottom_toTopOf="@id/zeroButton"
             app:layout_constraintLeft_toLeftOf="@id/fiveButton"
@@ -111,7 +112,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/threeButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_3)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_3, "")}'
             android:text="@string/_3"
             app:layout_constraintBottom_toTopOf="@id/modulusButton"
             app:layout_constraintLeft_toLeftOf="@id/sixButton"
@@ -120,7 +121,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/multiplyButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/x)}"
+            android:onClick='@{()->viewModel.appendExp(@string/x, "")}'
             android:text="@string/x"
             app:layout_constraintBottom_toTopOf="@id/divideButton"
             app:layout_constraintLeft_toLeftOf="@id/minusButton"
@@ -129,13 +130,14 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/pointButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/dot)}"
-            android:paddingStart="25dp"
-            android:paddingLeft="25dp"
-            app:iconSize="7dp"
-            app:iconGravity="textStart"
+            android:contentDescription="@string/dot_description"
+            android:gravity="start|center_vertical"
+            android:onClick='@{()->viewModel.appendExp(@string/dot, "")}'
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             app:icon="@drawable/ic_baseline_circle_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="3dp"
             app:layout_constraintBottom_toTopOf="@id/removeButton"
             app:layout_constraintLeft_toLeftOf="@id/oneButton"
             app:layout_constraintTop_toBottomOf="@id/oneButton" />
@@ -143,16 +145,17 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/zeroButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button"
-            android:onClick="@{()->viewModel.appendExp(@string/_0)}"
+            android:onClick='@{()->viewModel.appendExp(@string/_0, "")}'
             android:text="@string/_0"
             app:layout_constraintBottom_toTopOf="@id/clearButton"
             app:layout_constraintLeft_toLeftOf="@id/twoButton"
-            app:layout_constraintTop_toBottomOf="@id/twoButton" />
+            app:layout_constraintTop_toBottomOf="@id/twoButton"
+            app:layout_marginBaseline="6dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/modulusButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/mod)}"
+            android:onClick='@{()->viewModel.appendExp(@string/mod, "")}'
             android:text="@string/mod"
             app:layout_constraintBottom_toTopOf="@id/equalButton"
             app:layout_constraintLeft_toLeftOf="@id/threeButton"
@@ -161,8 +164,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/divideButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:onClick="@{()->viewModel.appendExp(@string/divide)}"
-            android:text="@string/divide"
+            android:text="@string/divideSymbol"
             app:layout_constraintBottom_toTopOf="@id/advanceButton"
             app:layout_constraintLeft_toLeftOf="@id/multiplyButton"
             app:layout_constraintTop_toBottomOf="@id/multiplyButton" />
@@ -170,20 +172,20 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/removeButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
+            android:contentDescription="@string/delete_Description"
+            android:gravity="start|center_vertical"
             android:onClick="@{()->viewModel.deleteExp()}"
+            app:icon="@drawable/ic_baseline_cancel_presentation_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
             app:iconSize="20dp"
-            app:iconGravity="textStart"
-            app:icon="@drawable/keyboard_backspace_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/pointButton"
             app:layout_constraintTop_toBottomOf="@id/pointButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/clearButton"
-            style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
-            android:autoSizeMinTextSize="10sp"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
+            style="@style/ShapeAppearance.Calculator.Operator.DynamicSize"
             android:onClick="@{()->viewModel.clearExp()}"
             android:text="@string/clr"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -205,8 +207,13 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/advanceButton"
             style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators"
+            android:contentDescription="@string/switch_advance_description"
+            android:gravity="start|center_vertical"
+            android:onClick="setFragment"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
             app:icon="@drawable/ic_baseline_chevron_right_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/divideButton"
             app:layout_constraintTop_toBottomOf="@id/divideButton" />

@@ -1,5 +1,6 @@
 package com.example.calculator
 
+
 import android.util.Log
 import com.example.calculator.viewmodel.DEGRAD
 import com.example.calculator.viewmodel.TRIGMODE
@@ -8,31 +9,34 @@ import java.lang.Math.toDegrees
 import  java.lang.Math.toRadians
 import java.util.regex.Pattern
 import kotlin.math.*
+import java.math.BigDecimal
 import java.lang.Exception as Exception1
 
 class MathComputation(Exp: String, val degrad: DEGRAD) {
 
-    private lateinit var _finalResult: Number
-    val finalResult: Number
+    private var _finalResult: BigDecimal? = null
+    val computation = BasicArithmetic()
+
+    val finalResult: String
         get() {
-            val intResult = this._finalResult?.toInt()
-            val doubleResult = this._finalResult?.toDouble()
-            return if((doubleResult.minus(intResult))==0.0) {
-                this._finalResult.toInt()
-            } else this._finalResult.toDouble()
+            if(_finalResult==null){
+                return ""
+            }
+            return "${computation.getNonDecimal(_finalResult!!)?:_finalResult}"
         }
 
-    lateinit var errorMessage: String
+    var errorMessage: String? = null
 
     init {
         this._finalResult = calculate(Exp)
     }
 
 
-    private fun simpleArithmeticOps(exp: String): Double {
+    private fun simpleArithmeticOps(exp: String): String {
         try {
-            val simpleRegex: Pattern = Pattern.compile("^-?\\d+\\.?\\d*$")
-            var result: Double? = null
+            if(exp.isNullOrBlank()) return ""
+            val simpleRegex = NUMBER_PATTERN
+            var result: BigDecimal? = null
             val operation: Char
             val values: List<String>
             when {
@@ -44,8 +48,8 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
                     values = exp.split('+')
                     operation = '+'
                 }
-                "-" in exp -> {
-                    values = exp.split("-")
+                exp.contains("(?<!E)-".toRegex()) -> {
+                    values = exp.split("(?<!E)-".toRegex())
                     operation = '-'
                 }
                 "x" in exp -> {
@@ -60,57 +64,55 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
             values.forEach {
                 if (result === null && it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                         .matches()
-                ) it.toDouble() else simpleArithmeticOps(it)
-                else if (result === null && it.isEmpty()) result = 0.0
+                ) computation.convertToBigDecimal(it) else computation.convertToBigDecimal(simpleArithmeticOps(it))
+                else if (result === null && it.isEmpty()) result = BigDecimal.ZERO
                 else if (result !== null) {
                     when (operation) {
                         '/' -> {
                             if (it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                                     .matches()
-                            ) result!! / it.toDouble() else result!! / simpleArithmeticOps(it)
+                            ) computation.divide(result!!, it)  else computation.divide(result!!, simpleArithmeticOps(it))
                         }
                         'x' -> {
                             if (it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                                     .matches()
-                            ) result!! * it.toDouble() else result!! * simpleArithmeticOps(it)
+                            ) computation.multiply(result!!, it)  else computation.multiply(result!!, simpleArithmeticOps(it))
                         }
                         '+' -> {
                             if (it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                                     .matches()
-                            ) result!! + it.toDouble() else result!! + simpleArithmeticOps(it)
+                            ) computation.plus(result!!, it)  else computation.plus(result!!, simpleArithmeticOps(it))
                         }
                         '%' -> {
                             if (it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                                     .matches()
-                            ) result!! % it.toDouble() else result!! % simpleArithmeticOps(it)
+                            ) computation.modulus(result!!, it)  else computation.modulus(result!!, simpleArithmeticOps(it))
                         }
                         '-' -> {
                             if (it.isNotEmpty()) result = if (simpleRegex.matcher(it)
                                     .matches()
-                            ) result!! - it.toDouble() else result!! - simpleArithmeticOps(it)
+                            ) computation.minus(result!!, it)  else computation.minus(result!!, simpleArithmeticOps(it))
                         }
                     }
                 }
             }
 
-            return result!!
+            return "$result"
         } catch (e: ArithmeticException) {
-            Log.d("Error Arithemtic", e.message ?: "")
-            return 0.0
+            return ""
         } catch (e: Exception1) {
-            Log.d("Error Exception", e.message ?: "")
-            return 0.0
+            return ""
         }
     }
 
-    private fun calculate(exp: String): Double {
+    private fun calculate(exp: String): BigDecimal? {
         try {
             var complexOperations = exp
 
             //replace every constant π with Math.PI value
             while(complexOperations.contains("π")){
                 val index = complexOperations.indexOf("π")
-                complexOperations = appendResultToExp(complexOperations, Math.PI.toString(), index, index+1)
+                complexOperations = appendResultToExp(Math.PI.toString(), complexOperations, index, index+1)
             }
 
             var actualExp: String
@@ -119,36 +121,47 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
                 var openIndex = -1
                 for (char in complexOperations) {
                     if (char == '(') openIndex = index
-                    else if (char == ')') {
+                    if (char == ')') {
                         if (openIndex == -1) {
                             complexOperations = complexOperations.removeRange(index, index + 1)
                             break
                         }
-                        actualExp = complexOperations.substring(openIndex + 1, index)
+                        actualExp = if(openIndex==index) "" else complexOperations.substring(openIndex + 1, index)
                         actualExp = allocComputation(actualExp)
-                        if (errorMessage.isNotBlank()) return 0.0
-                        complexOperations =
-                            appendResultToExp(actualExp, complexOperations, openIndex, index + 1)
+                        if (errorMessage?.isNotBlank() == true) return null
+                        Log.d("Math Computation 132", "$complexOperations - $actualExp - ${appendResultToExp(actualExp, complexOperations, openIndex, index + 1)}")
+                        complexOperations = appendResultToExp(actualExp, complexOperations, openIndex, index + 1)
                         break
                     }
+                    else if((index+1)==complexOperations.length){
+                        actualExp = if(openIndex==index) "" else complexOperations.substring(openIndex + 1, index+1)
+                        actualExp = allocComputation(actualExp)
+                        if (errorMessage?.isNotBlank() == true) return null
+                        complexOperations = appendResultToExp(actualExp, complexOperations, openIndex, index + 1)
+                        break
+                    }
+
                     index++
                 }
             }
             complexOperations = allocComputation(complexOperations)
-            return if (NUMBER_PATTERN.matcher(complexOperations).matches())
-                complexOperations.toDouble()
+            return if (RESULT_PATTERN.matcher(complexOperations).matches()) {
+                computation.convertToBigDecimal(complexOperations)
+            }
             else
-                0.0
+                null
         } catch (err: ArithmeticException) {
             errorMessage = "A computational error occur"
-            return 0.0
+            return null
         } catch (err: Exception) {
+            Log.d("Math Computation Error", "$err ${err.cause}")
             errorMessage = "An error occur"
-            return 0.0
+            return null
         }
     }
 
     private fun allocComputation(exp: String): String {
+        Log.d("allocComputation 164", "$exp  (+) ${TRIG_PATTERN.matcher(exp).matches()}")
         var result = exp
         if (XRT_POW_PATTERN.matcher(result).find()) {
             result = xRootPowCalculation(result)
@@ -159,17 +172,19 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
         if (TRIG_PATTERN.matcher(result).find()) {
             result = trigArithmetic(result)
         }
-        return "${simpleArithmeticOps(result)}"
+
+        return simpleArithmeticOps(result)
     }
 
     private fun trigArithmetic(expression: String): String {
         var trigExp = expression
-        val match = TRIG_NUMBER_PATTERN.matcher(trigExp)
+        var match = TRIG_NUMBER_PATTERN.matcher(trigExp)
         while (match.find()) {
-            val _exp = match.group(1)
+
+            val _exp = match.group(0)
             val exp = _exp!!
-            val startIndex = match.start(1)
-            val endIndex = match.end(1)
+            val startIndex = match.start(0)
+            val endIndex = match.end(0)
             val numberValue = getTrigValue(exp)
             if (numberValue.isNullOrBlank()) trigExp =
                 appendResultToExp("", trigExp, startIndex, endIndex)
@@ -182,7 +197,7 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
                             errorMessage = "hyperbolic tangent value should be >=-1 and <=1"
                             return ""
                         } else if (doubleNumberValue.toInt().absoluteValue == 1) {
-                            errorMessage = "Infinity"
+                            errorMessage = INFINITY
                             return ""
                         }
                         result = radToDeg(atanh(doubleNumberValue))
@@ -216,23 +231,42 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
                     }
                     "cos" in exp -> {
                         result = cos(degToRad(doubleNumberValue))
+                        val angleInDegree = toDegrees(degToRad(doubleNumberValue))
+                        val angleRatio = angleInDegree/90
+                        if(angleRatio%2==1.0){
+                            result = 0.0
+                        }
                     }
                     "sin" in exp -> {
                         result = sin(degToRad(doubleNumberValue))
+                        val angleInDegree = toDegrees(degToRad(doubleNumberValue))
+                        if(angleInDegree % 180==0.0){
+                            result = 0.0
+                        }
                     }
                     "tan" in exp -> {
                         result = tan(degToRad(doubleNumberValue))
+                        val cosAngleInDegreeRatio = toDegrees(degToRad(doubleNumberValue))/90
+                        val sinAngleInDegree = toDegrees(degToRad(doubleNumberValue))
+                        if(cosAngleInDegreeRatio%2==1.0){
+                            errorMessage = INFINITY
+                            return ""
+                        }
+                        if(sinAngleInDegree % 180==0.0){
+                            result = 0.0
+                        }
+
                     }
                     "fib" in exp->{
                         result = fibonacci(round(doubleNumberValue).toInt()).toDouble()
-                        if(errorMessage.isNotBlank()) return ""
+                        if(errorMessage?.isNotBlank() == true) return ""
                     }
                     "ln" in exp -> {
                         if (doubleNumberValue < 0) {
                             errorMessage = "natural logarithm value should be >=0"
                             return ""
                         } else if (doubleNumberValue.equals(0.0)) {
-                            errorMessage = "Infinity"
+                            errorMessage = INFINITY
                             return ""
                         }
                         result = ln(doubleNumberValue)
@@ -248,9 +282,13 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
                         result = sqrt(doubleNumberValue)
                     }
                 }
+
+                val trigComp = BasicArithmetic(15)
                 trigExp =
-                    appendResultToExp(result.toString(), trigExp, startIndex, endIndex)
+                    appendResultToExp(trigComp.convertToBigDecimal(result).toString(), trigExp, startIndex, endIndex)
             }
+
+            match = TRIG_NUMBER_PATTERN.matcher(trigExp)
         }
 
         return trigExp
@@ -260,17 +298,17 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
         val match = FACTORIAL_PATTERN.matcher(exp)
         var answer = exp
         while (match.find()) {
-            val factorialExp = match.group(1)
-            val startIndex = match.start(1)
-            val endIndex = match.end(1)
-            val numberValue = NUMBER_PATTERN.matcher(factorialExp).group(1).toDouble()
+            val factorialExp = match.group(0)
+            val startIndex = match.start(0)
+            val endIndex = match.end(0)
+            val numberValue = getTrigValue(factorialExp)?.toDouble()
             answer = appendResultToExp(
-                factorial(numberValue.roundToInt()).toString(),
+                factorial(numberValue!!.roundToInt()).toString(),
                 answer,
                 startIndex,
                 endIndex
             )
-            if (errorMessage.isNotBlank()) return ""
+            if (errorMessage?.isNotBlank() == true) return ""
         }
 
         return answer
@@ -280,16 +318,16 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
         var expAnswer = exp
         val match = XRT_POW_PATTERN.matcher(exp)
         while (match.find()) {
-            val xrtExp = match.group(1)
-            val startIndex = match.start(1)
-            val endIndex = match.end(1)
+            val xrtExp = match.group(0)
+            val startIndex = match.start(0)
+            val endIndex = match.end(0)
             val xrtValues = xrtExp?.split("(xrt|pow)".toRegex())
             if (xrtValues?.get(1)?.isNotBlank() == true) xrtValues[1].also {
-                val answer = if (xrtExp.contains("xrt")) xrtValues[1].toDouble()
-                    .pow(1 / xrtValues[0].toDouble())
-                else xrtValues[1].toDouble().pow(xrtValues[0].toDouble())
+                val answer = if (xrtExp.contains("xrt")) xrtValues[0].toDouble()
+                    .pow(1 / xrtValues[1].toDouble())
+                else xrtValues[0].toDouble().pow(xrtValues[1].toDouble())
                 expAnswer = appendResultToExp(answer.toString(), expAnswer, startIndex, endIndex)
-            } else appendResultToExp("", expAnswer, startIndex, endIndex)
+            } else expAnswer = appendResultToExp("", expAnswer, startIndex, endIndex)
 
         }
 
@@ -332,11 +370,11 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
     ): String {
         return if (startIndex == 0 && exp.length == endIndex) result
         else {
-            val startExp = exp.substring(0..startIndex)
-            val endExp = exp.substring(endIndex..exp.length)
-            if (END_WITH_PATTERN.matcher(startExp).find()) startExp.plus("x${result}")
+            var startExp = exp.substring(0, startIndex)
+            val endExp = if(startIndex==exp.length-1) "" else exp.substring(endIndex, exp.length)
+            startExp = if (END_WITH_PATTERN.matcher(startExp).find())  startExp.plus("x${result}")
             else startExp.plus(result)
-            if (START_WITH_PATTERN.matcher(endExp).find()) startExp.plus("x${endExp}")
+            startExp = if (START_WITH_PATTERN.matcher(endExp).find()) startExp.plus("x${endExp}")
             else startExp.plus(endExp)
 
             startExp
@@ -344,9 +382,9 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
     }
 
     private fun getTrigValue(exp: String): String? {
-        val match = NUMBER_PATTERN.matcher(exp);
-        if (match.group(1).isNullOrBlank()) return null
-        return match.group(1)
+        val match = NUMBER_PATTERN.matcher(exp)
+        if (!match.find()) return null
+        return match.group(0)
     }
 
     private fun degToRad(value: Double): Double {
@@ -366,19 +404,22 @@ class MathComputation(Exp: String, val degrad: DEGRAD) {
 
     companion object {
         val EXP_PATTERN: Pattern =
-            Pattern.compile("^(((cos|sin|tan|acos|asin|atan|cosh|sinh|tanh|acosh|(?<=(\\d|\\)))(xrt|pow)|asinh|atanh|ln|log|exp|sqrt|fib)?\\()*((-?\\d+(?<!\\.\\d{0,64})(\\.?\\d*)|π))*((?<=\\(.{0,64})(?<![(+-/%x])\\)?)?((?<=(\\)|\\d|π))(?<!\\.{2})[+-/!x%])?)*$")
+            Pattern.compile("^(((asinh|atanh|acosh|acos|asin|atan|cosh|sinh|tanh|sin|cos|tan|(?<=(\\d|\\)))(xrt|pow)|ln|log|exp|sqrt|fib)?\\()*((-?\\d+(?<!\\.\\d{0,64})(\\.?\\d*)|π))*((?<=\\(.{0,64})(?<![(+-/%x])\\)?)?((?<=(\\)|\\d|π))(?<!\\.{2})[+-/!x%])?)*$")
         val TRIG_PATTERN: Pattern =
-            Pattern.compile("(cos|sin|tan|acos|asin|atan|cosh|sinh|tanh|acosh|asinh|atanh|ln|log|exp|sqrt|fib)")
+            Pattern.compile("(acosh|asinh|atanh|acos|asin|atan|cosh|sinh|tanh|cos|sin|tan|ln|log|exp|sqrt|fib)")
         val TRIG_NUMBER_PATTERN: Pattern =
-            Pattern.compile("(cos|sin|tan|acos|asin|atan|cosh|sinh|tanh|acosh|asinh|atanh|ln|log|exp|sqrt|fib)(\\(?-?\\d*|-?\\d+)\\.?\\d*")
-        val NUMBER_PATTERN: Pattern = Pattern.compile("-?\\d*\\.?\\d+")
+            Pattern.compile("(asinh|atanh|acosh|acos|asin|atan|cosh|sinh|tanh|cos|tan|sin|ln|log|exp|sqrt|fib)(\\(?-?\\d*|-?\\d+)\\.?\\d*")
+        val NUMBER_PATTERN:Pattern  = Pattern.compile("-?\\d+\\.?\\d*(E(-|\\+)?\\d+)?")
+        val RESULT_PATTERN: Pattern = Pattern.compile("-?\\d+\\.?\\d*(E(-|\\+)?\\d+)?")
         val FACTORIAL_PATTERN: Pattern = Pattern.compile("-?\\d*\\.?\\d*!")
 
-        val END_WITH_PATTERN: Pattern = Pattern.compile("(-?\\d*\\.?\\d+|\\)|!)$")
+        val END_WITH_PATTERN: Pattern = Pattern.compile("(-?\\d*\\.?\\d+(E(-|\\+)?\\d+)?|\\)|!)$")
 
         val XRT_POW_PATTERN: Pattern = Pattern.compile("-?\\d*\\.?\\d*(xrt|pow)-?\\d*\\.?\\d*")
 
+        const val INFINITY = "Infinity"
+
         val START_WITH_PATTERN: Pattern =
-            Pattern.compile("^(cos|sin|tan|acos|asin|atan|-?\\d*\\.?\\d+(xrt|pow)?|cosh|sinh|tanh|acosh|asinh|atanh|ln|log|exp|sqrt|fib|\\()")
+            Pattern.compile("^(acosh|asinh|atanh|acos|asin|atan|-?\\d*\\.?\\d+(E(-|\\+)?\\d+)?(xrt|pow)?|cosh|sinh|tanh|cos|sin|tan|ln|log|exp|sqrt|fib|\\()")
     }
 }
