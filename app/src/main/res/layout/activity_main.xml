@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.calculator.viewmodel.CalculatorViewModel" />
+            type="com.xplicit.calculator.viewmodel.CalculatorViewModel" />
     </data>
 
     <LinearLayout
@@ -28,19 +28,23 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="10dp"
                 android:paddingTop="3dp"
-                android:textColor="@color/design_default_color_error"
                 android:textSize="13sp"
                 tools:text="error message" />
 
             <TextView
-                android:id="@+id/xPowNotification"
+                android:id="@+id/specialNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
+                android:textAlignment="center"
+                android:layout_toEndOf="@id/errorMessage"
+                android:layout_toRightOf="@id/errorMessage"
+                android:layout_toStartOf="@id/degNotification"
+                android:layout_toLeftOf="@id/degNotification"
                 android:paddingHorizontal="10dp"
                 android:paddingTop="3dp"
                 android:textSize="13sp"
-                tools:text="@string/xrt" />
+                tools:text="@string/xrt"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/degNotification"
@@ -68,11 +72,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:autoSizeMaxTextSize="45sp"
+                android:autoSizeMaxTextSize="40sp"
                 android:autoSizeMinTextSize="30sp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center_vertical"
                 android:maxLines="1"
+                android:fontFamily="@font/poppins_regular"
                 android:minWidth="150dp"
                 android:padding="10dp"
                 android:text="@{viewModel.displayExp}"
@@ -86,8 +91,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.9"
+            android:fontFamily="@font/poppins_light"
             android:autoSizeMaxTextSize="55sp"
-            android:autoSizeMinTextSize="30sp"
+            android:autoSizeMinTextSize="25sp"
             android:autoSizeTextType="uniform"
             android:background="@color/black_05"
             android:gravity="end"

@@ -6,14 +6,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.calculator.viewmodel.CalculatorViewModel" />
+            type="com.xplicit.calculator.viewmodel.CalculatorViewModel" />
         <variable
             name="trigMode"
-            type="com.example.calculator.viewmodel.TRIGMODE" />
+            type="com.xplicit.calculator.viewmodel.TRIGMODE" />
 
         <variable
             name="degRad"
-            type="com.example.calculator.viewmodel.DEGRAD" />
+            type="com.xplicit.calculator.viewmodel.DEGRAD" />
     </data>
 
     <!-- TODO: Update blank fragment layout -->
@@ -36,7 +36,7 @@
                 android:id="@+id/radButton"
                 style="@style/ShapeAppearance.Calculator.Operator.DynamicSize.L"
                 android:onClick="@{()->viewModel.changeAngleFormat()}"
-                android:text="@{viewModel.degRad==degRad.DEG?@string/deg:@string/rad}"
+                android:text="@{viewModel.degRad==degRad.DEG?@string/rad:@string/deg}"
                 app:layout_constraintLeft_toRightOf="@id/invButton"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/cosButton"
@@ -170,8 +170,9 @@
             <com.google.android.material.button.MaterialButton
                 style="@style/ShapeAppearance.Calculator.Operator.DynamicSize.L"
                 android:id="@+id/lnButton"
-                android:text="@string/ln"
+                android:text="@{viewModel.trigMode==trigMode.TRIG?@string/ln:@string/exp_power}"
                 android:textAllCaps="false"
+                tools:text="@string/ln"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/sinhButton"
@@ -394,8 +395,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/divideButton"
                 style="@style/ShapeAppearanceOverlay.Calculator.Button.Operators.L"
-                android:onClick='@{()->viewModel.appendExp(@string/divide, "")}'
-                android:text="@string/divide"
+                android:text="@string/divideSymbol"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/modulusButton"
                 app:layout_constraintRight_toLeftOf="@id/equalButton"

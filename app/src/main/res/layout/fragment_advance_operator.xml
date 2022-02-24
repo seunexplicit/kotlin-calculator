@@ -7,15 +7,15 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.calculator.viewmodel.CalculatorViewModel" />
+            type="com.xplicit.calculator.viewmodel.CalculatorViewModel" />
 
         <variable
             name="trigMode"
-            type="com.example.calculator.viewmodel.TRIGMODE" />
+            type="com.xplicit.calculator.viewmodel.TRIGMODE" />
 
         <variable
             name="degRad"
-            type="com.example.calculator.viewmodel.DEGRAD" />
+            type="com.xplicit.calculator.viewmodel.DEGRAD" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +38,7 @@
             android:id="@+id/radButton"
            style="@style/ShapeAppearance.Calculator.Operator.DynamicSize"
             android:onClick="@{()->viewModel.changeAngleFormat()}"
-            android:text="@{viewModel.degRad==degRad.DEG?@string/deg:@string/rad}"
+            android:text="@{viewModel.degRad==degRad.DEG?@string/rad:@string/deg}"
             app:layout_constraintLeft_toRightOf="@id/invButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/cosButton"
@@ -61,6 +61,7 @@
            style="@style/ShapeAppearance.Calculator.Operator.DynamicSize"
             android:id="@+id/sqrtButton"
             android:text="@string/sqrt"
+            android:hapticFeedbackEnabled="true"
             android:textAllCaps="false"
             app:layout_constraintLeft_toRightOf="@id/factorialButton"
             app:layout_constraintRight_toRightOf="parent"
@@ -163,8 +164,9 @@
         <com.google.android.material.button.MaterialButton
            style="@style/ShapeAppearance.Calculator.Operator.DynamicSize"
             android:id="@+id/lnButton"
-            android:text="@string/ln"
+            android:text="@{viewModel.trigMode==trigMode.TRIG?@string/ln:@string/exp_power}"
             android:textAllCaps="false"
+            tools:text="@string/ln"
             app:layout_constraintBottom_toTopOf="@id/forwardButton"
             app:layout_constraintLeft_toLeftOf="@id/expButton"
             app:layout_constraintTop_toBottomOf="@id/expButton"

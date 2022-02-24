@@ -45,13 +45,12 @@
     <string name="u03c0">π</string>
     <string name="infinity">\u221e</string>
     <string name="divideSymbol">\u00f7</string>
+    <string name="exp_power">e\u02E3</string>
+    <string name="d_exp_power">e^(</string>
+    <string name="e_exp_power">xpon(</string>
     <string name="exp">e</string>
-    <string name="d_exp">e(</string>
-    <string name="e_exp">e(</string>
-    <string name="xy_log">log(%s)</string>
-    <string name="xy_ln">ln(%s)</string>
-    <string name="closed_exp">e<sup>(%s)</sup></string>
-    <string name="closee_exp">e(%s)</string>
+    <string name="d_exp">e</string>
+    <string name="e_exp">exp</string>
     <string name="open_bracket">(</string>
     <string name="close_bracket">)</string>
     <string name="pow">^</string>
@@ -65,9 +64,8 @@
 
     <string name="fib">fib</string>
     <string name="d_fib">fib(</string>
-    <string name="closed_fib">fib( %s )</string>
-    <string name="xrt"><sup>x</sup>√y</string>
-    <string name="d_xrt">)√(</string>
+    <string name="xrt">\u02E3√y</string>
+    <string name="d_xrt">)\u02E3√(</string>
     <string name="e_xrt">)xrt(</string>
     <string name="random">RANDOM</string>
     <string name="sinh">sinh</string>
